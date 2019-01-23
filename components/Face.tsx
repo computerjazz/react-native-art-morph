@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Animated, ART, StyleSheet, View, PanResponder } from 'react-native';
-import Morph from 'art/morph/path';
+import { Animated, ART, StyleSheet, View } from 'react-native';
+import { generateTweenArray } from '../utils/morphUtils'
 
 const {
   Surface,
@@ -8,6 +8,7 @@ const {
   Group,
 } = ART
 const AnimatedShape = Animated.createAnimatedComponent(Shape);
+
 
 import * as axis from "d3-axis"; // tslint:disable-line
 import * as format from "d3-format"; // tslint:disable-line
@@ -46,16 +47,7 @@ export default class Face extends Component {
     this.faceWidth = faceWidth
     this.eyeSize = eyeSize
 
-    const generateTweenArray = ({ ratios, svgs }) => {
-      const numSteps = ratios.length - 1
-      return [...Array(numSteps)].map((d, i) => {
-        return {
-          morph: Morph.Tween(svgs[i], svgs[i + 1]),
-          fromRatio: ratios[i],
-          toRatio: ratios[i + 1],
-        }
-      })
-    }
+
 
     const generateSmile = (mouthOpenRatio = 1) => refArray.map((d, i, arr) => {
       const xRatio = i / (arr.length - 1)
