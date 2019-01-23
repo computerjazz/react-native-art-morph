@@ -81,7 +81,7 @@ class FaceSlider extends React.Component {
             Animated.timing(this.xRatio, {
               toValue: ratio,
               duration: 500,
-              easing: Easing.inOut(Easing.quad)
+              easing: Easing.inOut(Easing.quad),
             }).start()
           }}
           style={{

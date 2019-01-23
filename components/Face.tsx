@@ -209,6 +209,21 @@ export default class Face extends Component {
       eyePath: eyeState,
     })
   }
+
+  renderEye() {
+    return (
+      <Surface width={this.eyeSize} height={this.eyeSize}>
+        <Group>
+          <AnimatedShape
+            d={this.state.eyePath}
+            stroke={featureColor}
+            fill={featureColor}
+            strokeWidth={1}
+          />
+        </Group>
+      </Surface>
+    )
+  }
   
 
   render() {
@@ -231,14 +246,13 @@ export default class Face extends Component {
             style={{
               position: 'absolute',
               borderRadius: width,
-              backgroundColor: 'white',
+              backgroundColor: 'blue',
               width: '70%',
               height: '70%',
               shadowOffset: { width: 0, height: 1 },
               shadowColor: 'black',
               shadowOpacity: 0.25,
               shadowRadius: 2,
-              elevation: 3,
             }}
           />
           <Animated.View
@@ -259,16 +273,7 @@ export default class Face extends Component {
             width: this.eyeSize,
             height: this.eyeSize,
           }}>
-            <Surface width={this.eyeSize} height={this.eyeSize}>
-              <Group>
-                <AnimatedShape
-                  d={this.state.eyePath}
-                  stroke={featureColor}
-                  fill={featureColor}
-                  strokeWidth={1}
-                />
-              </Group>
-            </Surface>
+            {this.renderEye()}
           </View>
 
           <View style={{
@@ -281,16 +286,7 @@ export default class Face extends Component {
               rotateY: '180deg',
             }]
           }}>
-            <Surface width={this.eyeSize} height={this.eyeSize}>
-              <Group>
-                <AnimatedShape
-                  d={this.state.eyePath}
-                  stroke={featureColor}
-                  fill={featureColor}
-                  strokeWidth={1}
-                />
-              </Group>
-            </Surface>
+            {this.renderEye()}
           </View>
 
 
