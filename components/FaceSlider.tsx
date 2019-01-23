@@ -25,7 +25,6 @@ class FaceSlider extends React.Component {
         const widthRatio = x / activeWidth
         if (widthRatio >= 0 && widthRatio <= 1) {
           this.xRatio.setValue(widthRatio)
-          this.setState({ ratio: widthRatio })
         }
       },
       onPanResponderRelease: (evt, { dx }) => {
@@ -34,7 +33,6 @@ class FaceSlider extends React.Component {
     })
 
     this.state = {
-      ratio: intialRatio,
       prevX: intialRatio * activeWidth,
     }
   }
@@ -148,12 +146,6 @@ class FaceSlider extends React.Component {
     )
   }
 
-  componentDidMount() {
-    this.xRatio.addListener(({ value }) => {
-      this.setState({ ratio: value })
-    })
-  }
-
   render() {
     return (
       <View style={{
@@ -170,7 +162,7 @@ class FaceSlider extends React.Component {
             ]
           }}
         >
-          <Face width={faceWidth} ratio={this.state.ratio} />
+          <Face width={faceWidth} ratio={this.xRatio} />
         </Animated.View>
 
       </View>

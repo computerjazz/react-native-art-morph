@@ -25,7 +25,7 @@ const featureColor = '#888'
 
 export default class Face extends Component {
   xRatio = new Animated.Value(0)
-  color = this.xRatio.interpolate({
+  color = this.props.ratio.interpolate({
     inputRange: [0, 0.5, 1],
     outputRange: ['#f99489', '#f9d889', '#f9d889'],
   })
@@ -176,21 +176,20 @@ export default class Face extends Component {
     this.state = {
       mouthPath: this.mouthTweens[0].morph,
       eyePath: this.eyeTweens[0].morph,
+      ratio: 0,
     }
   }
 
   componentDidMount() {
-    this.setFace(this.props.ratio)
+    const { ratio } = this.props
+    this.setFace(ratio._value)
+    ratio.addListener(({ value }) => {
+      this.setFace(value)
+    })
   }
 
-  componentDidUpdate(prevProps){
-    if (prevProps.ratio !== this.props.ratio) { 
-      this.setFace(this.props.ratio)
-    }
-  }
 
   setFace = (ratio) => {
-    this.xRatio.setValue(ratio)
     const mouthPath = this.mouthTweens.find(t => ratio <= t.toRatio)
     const mouthRange = mouthPath.toRatio - mouthPath.fromRatio
     const mouthPanRatio = (ratio - mouthPath.fromRatio) / mouthRange
@@ -204,10 +203,8 @@ export default class Face extends Component {
     const eyeState = eyePath.morph
     eyeState.tween(eyePanRatio)
 
-    this.setState({
-      mouthPath: mouthState,
-      eyePath: eyeState,
-    })
+    if (mouthState !== this.state.mouthPath) this.setState({ mouthPath: mouthState })
+    if (eyePath !== this.state.eyeState) this.setState({ eyePath: eyeState })
   }
 
   renderEye() {
@@ -227,7 +224,7 @@ export default class Face extends Component {
   
 
   render() {
-    const {width } = this.props
+    const { width } = this.props
     return (
       <View style={{ 
         width,
