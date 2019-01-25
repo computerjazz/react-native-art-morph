@@ -1,15 +1,19 @@
 import * as React from 'react'
 import { View } from 'react-native'
-import FaceSlider from './components/FaceSlider'
 import {createStackNavigator, createAppContainer} from 'react-navigation'
 
 import Menu from './screens/Menu'
+import FaceSlider from './components/FaceSlider'
+import Coin from './components/Coin'
+import Shape from './components/Shape'
 
-export const routeNames = ['Face']
+export const routeNames = ['Face', 'Shape']
 
 const Stack = createStackNavigator({
   Menu: { screen: Menu },
   Face: { screen: FaceSlider },
+  Coin: { screen: Coin },
+  Shape: { screen: Shape },
 }, {
   initialRoutName: 'Menu',
 })
@@ -30,6 +34,8 @@ class App extends React.Component {
         onLayout={() => {
           // For some reason this is necessary on android
           // or else ART Surface renders a black screen
+          // When rendering ART at the root of the app I had to
+          // add an additional timeout that delayed rendering
         }}
         style={{ flex: 1 }}
         >

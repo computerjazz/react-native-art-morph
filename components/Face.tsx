@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Animated, ART, StyleSheet, View } from 'react-native';
-import { generateTweenArray } from '../utils/morphUtils'
+import { generateTweenArray, getTween } from '../utils/morphUtils'
 
 const {
   Surface,
@@ -182,25 +182,37 @@ export default class Face extends Component {
 
 
   setFace = (ratio) => {
-    const mouthPath = this.mouthTweens.find(t => ratio <= t.toRatio)
-    const mouthRange = mouthPath.toRatio - mouthPath.fromRatio
-    const mouthPanRatio = (ratio - mouthPath.fromRatio) / mouthRange
-
-    const eyePath = this.eyeTweens.find(t => ratio <= t.toRatio)
-    const eyeRange = eyePath.toRatio - eyePath.fromRatio
-    const eyePanRatio = (ratio - eyePath.fromRatio) / eyeRange
+    const mouthPath = getTween(ratio, this.mouthTweens)
+    const eyePath = getTween(ratio, this.eyeTweens)
 
     const mouthState = mouthPath.morph
-    mouthState.tween(mouthPanRatio)
+    mouthState.tween(mouthPath.ratio)
     const eyeState = eyePath.morph
-    eyeState.tween(eyePanRatio)
+    eyeState.tween(eyePath.ratio)
 
     if (mouthState !== this.state.mouthPath) this.setState({ mouthPath: mouthState })
     if (eyePath !== this.state.eyeState) this.setState({ eyePath: eyeState })
   }
 
-  renderEye() {
+  renderEye = (flip) => {
+    const { width } = this.props
+    const extraStyles = flip ? {
+      transform: [{
+        rotateY: '180deg',
+      }],
+      right: width * 0.28,
+    } : {
+        left: width * 0.28,
+    }
+
     return (
+      <View style={{
+        ...extraStyles,
+        position: 'absolute',
+        top: width * 0.3,
+        width: this.eyeSize,
+        height: this.eyeSize,
+      }}>
       <Surface width={this.eyeSize} height={this.eyeSize}>
         <Group>
           <AnimatedShape
@@ -211,6 +223,7 @@ export default class Face extends Component {
           />
         </Group>
       </Surface>
+      </View>
     )
   }
   
@@ -223,7 +236,6 @@ export default class Face extends Component {
         height: width,
       }}>
         <Animated.View
-
           style={{
             position: 'absolute',
             width: width,
@@ -251,33 +263,11 @@ export default class Face extends Component {
               backgroundColor: this.color,
               width: '70%',
               height: '70%',
-    
         }}
       />
 
-          <View style={{
-            position: 'absolute',
-            left: width * 0.28,
-            top: width * 0.3,
-            width: this.eyeSize,
-            height: this.eyeSize,
-          }}>
             {this.renderEye()}
-          </View>
-
-          <View style={{
-            position: 'absolute',
-            right: width * 0.28,
-            top: width * 0.3,
-            width: this.eyeSize,
-            height: this.eyeSize,
-            transform: [{
-              rotateY: '180deg',
-            }]
-          }}>
-            {this.renderEye()}
-          </View>
-
+            {this.renderEye(true)}
 
           <View style={{
             position: 'absolute',
@@ -302,9 +292,3 @@ export default class Face extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {  
-  },
-
-});

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Animated, Easing, Dimensions, PanResponder, View, TouchableOpacity, Text } from 'react-native'
 import Face from './Face'
+import { PanGestureHandler } from 'react-native-gesture-handler'
 
 const { width } = Dimensions.get('window')
 const intialRatio = 2 / 3
